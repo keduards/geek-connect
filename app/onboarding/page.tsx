@@ -80,7 +80,7 @@ export default function Onboarding() {
                     className={`h-[60px] rounded-lg text-base font-medium transition-colors ${
                       role === roleOption.value
                         ? 'bg-black text-white'
-                        : 'bg-muted text-foreground hover:bg-muted/80'
+                        : 'bg-muted text-foreground hover:bg-accent hover:border-2 hover:border-primary'
                     }`}
                   >
                     {roleOption.label}

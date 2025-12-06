@@ -21,6 +21,7 @@ export default function Collab() {
   const [tipo, setTipo] = useState('IDEA') // IDEA or PROYECTO
   const [roleNeeded, setRoleNeeded] = useState('developer')
   const [posts, setPosts] = useState<any[]>([])
+  const [profiles, setProfiles] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
   const [applying, setApplying] = useState<string | null>(null)
@@ -31,18 +32,29 @@ export default function Collab() {
   useEffect(() => {
     const loadPosts = async () => {
       // User is auto-created, so always proceed
-      const { data } = await supabase
+      const { data: postsData } = await supabase
         .from('collab_posts')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(30)
 
-      setPosts(data || [])
+      const { data: profilesData } = await supabase
+        .from('profiles')
+        .select('*')
+        .limit(100)
+
+      setPosts(postsData || [])
+      setProfiles(profilesData || [])
       setLoading(false)
     }
 
     loadPosts()
   }, [router])
+
+  const getAuthorName = (authorId: string) => {
+    const profile = profiles.find((p: any) => p.user_id === authorId)
+    return profile?.display_name || 'Anonymous'
+  }
 
   const create = async () => {
     try {
@@ -64,13 +76,13 @@ export default function Collab() {
       ])
 
       // Reload posts
-      const { data } = await supabase
+      const { data: postsData } = await supabase
         .from('collab_posts')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(30)
 
-      setPosts(data || [])
+      setPosts(postsData || [])
       setTitle('')
       setDesc('')
     } catch (error) {
@@ -138,74 +150,80 @@ export default function Collab() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-6">
-      <div className="mx-auto max-w-4xl">
+    <div className="min-h-screen bg-background p-4 md:p-6">
+      <div className="mx-auto max-w-7xl">
         <h1 className="mb-6 text-3xl font-bold tracking-tight">Collab Board</h1>
 
-        {/* Create Post Form */}
-        <div className="mb-8 rounded-lg border bg-card p-6 shadow-sm">
-          <h2 className="mb-4 text-xl font-semibold">Create New Post</h2>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Looking for a React developer"
-              />
-            </div>
+        {/* 2 Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left Column - Slim: Create Post Form */}
+          <div className="lg:col-span-3">
+            <div className="sticky top-6 rounded-lg border bg-card p-4 shadow-sm">
+              <h2 className="mb-4 text-lg font-semibold">Add New Post</h2>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm">Title</Label>
+                  <Input
+                    id="title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="e.g., Looking for a React developer"
+                    className="text-sm"
+                  />
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="tipo">Type</Label>
-              <Select value={tipo} onValueChange={setTipo}>
-                <SelectTrigger id="tipo">
-                  <SelectValue placeholder="Select type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="IDEA">Idea</SelectItem>
-                  <SelectItem value="PROYECTO">Project</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="tipo" className="text-sm">Type</Label>
+                  <Select value={tipo} onValueChange={setTipo}>
+                    <SelectTrigger id="tipo" className="text-sm">
+                      <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="IDEA">Idea</SelectItem>
+                      <SelectItem value="PROYECTO">Project</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="role">Role Needed</Label>
-              <Select value={roleNeeded} onValueChange={setRoleNeeded}>
-                <SelectTrigger id="role">
-                  <SelectValue placeholder="Select role needed" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="developer">Developer</SelectItem>
-                  <SelectItem value="product_manager">Product Manager</SelectItem>
-                  <SelectItem value="product_designer">Product Designer</SelectItem>
-                  <SelectItem value="qa">QA</SelectItem>
-                  <SelectItem value="devops">DevOps</SelectItem>
-                  <SelectItem value="founder">Founder</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="role" className="text-sm">Role Needed</Label>
+                  <Select value={roleNeeded} onValueChange={setRoleNeeded}>
+                    <SelectTrigger id="role" className="text-sm">
+                      <SelectValue placeholder="Select role needed" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="developer">Developer</SelectItem>
+                      <SelectItem value="product_manager">Product Manager</SelectItem>
+                      <SelectItem value="product_designer">Product Designer</SelectItem>
+                      <SelectItem value="qa">QA</SelectItem>
+                      <SelectItem value="devops">DevOps</SelectItem>
+                      <SelectItem value="founder">Founder</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <textarea
-                id="description"
-                value={desc}
-                onChange={(e) => setDesc(e.target.value)}
-                placeholder="Describe your project or what you're looking for..."
-                className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              />
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description" className="text-sm">Description</Label>
+                  <textarea
+                    id="description"
+                    value={desc}
+                    onChange={(e) => setDesc(e.target.value)}
+                    placeholder="Describe your project..."
+                    className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
 
-            <Button onClick={create} disabled={creating || !title || !desc}>
-              {creating ? 'Creating...' : 'Create Post'}
-            </Button>
+                <Button onClick={create} disabled={creating || !title || !desc} className="w-full text-sm">
+                  {creating ? 'Creating...' : 'Create Post'}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Posts List */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Recent Posts</h2>
+          {/* Right Column - Wide: Recent Posts */}
+          <div className="lg:col-span-9">
+            <div className="space-y-4">
+              <h2 className="text-xl font-semibold">Recent Posts</h2>
 
           {posts.length === 0 ? (
             <div className="rounded-lg border bg-card p-8 text-center">
@@ -220,13 +238,16 @@ export default function Collab() {
                 <div className="space-y-3">
                   <div>
                     <div className="flex items-start justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
                           <h3 className="text-lg font-semibold">{p.title}</h3>
                           <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
                             {p.tipo || 'IDEA'}
                           </span>
                         </div>
+                        <p className="text-sm text-muted-foreground mb-1">
+                          Posted by <span className="font-medium">{getAuthorName(p.author_id)}</span>
+                        </p>
                         <p className="mt-1 text-sm text-muted-foreground capitalize">
                           Looking for: {p.role_needed || 'Not specified'}
                         </p>
@@ -301,6 +322,8 @@ export default function Collab() {
               </div>
             ))
           )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

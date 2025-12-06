@@ -153,6 +153,57 @@ if (typeof window !== 'undefined') {
       { user_id: 'u4', id: 'profile_u4', display_name: 'Lina', role: 'product_designer', skills: ['figma', 'ux', 'product'], bio: 'Product designer focused on creating intuitive user experiences.' },
     ]
     mockUsers.forEach(user => LocalDB.createProfile(user))
+    
+    // Seed 5 mock posts with different personas
+    const mockPosts = [
+      {
+        author_id: 'u2',
+        title: 'Healthcare App MVP - Need React Developer',
+        description: 'Looking for an experienced React developer to join our healthcare startup. We\'re building a patient management platform and need someone who can work with TypeScript, React Query, and modern UI libraries. This is a paid project with equity options.',
+        tipo: 'PROYECTO',
+        role_needed: 'developer',
+        skills_required: ['react', 'typescript', 'healthcare'],
+        estado: 'VALIDANDO',
+      },
+      {
+        author_id: 'u1',
+        title: 'Open Source Design System - Designers Welcome',
+        description: 'I\'m starting an open-source design system for healthcare applications. Looking for product designers who are passionate about accessibility and healthcare UX. This is a collaborative project where we can all contribute and learn together.',
+        tipo: 'IDEA',
+        role_needed: 'product_designer',
+        skills_required: ['figma', 'ux', 'accessibility'],
+        estado: 'BORRADOR',
+      },
+      {
+        author_id: 'u3',
+        title: 'AI-Powered Analytics Platform - Backend Engineer Needed',
+        description: 'Building a machine learning platform for business analytics. Need a Python/FastAPI developer who has experience with ML pipelines, data processing, and API design. Remote work, flexible hours, competitive rate.',
+        tipo: 'PROYECTO',
+        role_needed: 'developer',
+        skills_required: ['python', 'fastapi', 'ml', 'aws'],
+        estado: 'EN_EJECUCION',
+      },
+      {
+        author_id: 'u4',
+        title: 'SaaS Product - Product Manager Collaboration',
+        description: 'Early-stage SaaS product looking for a product manager to help define roadmap and user stories. We have a working MVP and need someone to help prioritize features and work with our dev team. Equity-based opportunity.',
+        tipo: 'IDEA',
+        role_needed: 'product_manager',
+        skills_required: ['product', 'roadmap', 'agile'],
+        estado: 'VALIDANDO',
+      },
+      {
+        author_id: 'u1',
+        title: 'DevOps Infrastructure Setup - AWS Expert',
+        description: 'Need help setting up CI/CD pipelines and cloud infrastructure for a new project. Looking for someone with AWS, Docker, and Kubernetes experience. This could lead to a full-time role if the project succeeds.',
+        tipo: 'PROYECTO',
+        role_needed: 'devops',
+        skills_required: ['aws', 'docker', 'kubernetes', 'ci/cd'],
+        estado: 'BORRADOR',
+      },
+    ]
+    mockPosts.forEach(post => LocalDB.createPost(post))
+    
     localStorage.setItem('db_seeded', 'true')
   }
 }
