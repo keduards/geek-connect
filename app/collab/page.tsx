@@ -233,46 +233,67 @@ export default function Collab() {
             posts.map((p) => (
               <div
                 key={p.id}
-                className="rounded-lg border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
+                className="rounded-lg border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
               >
-                <div className="space-y-3">
-                  <div>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-semibold">{p.title}</h3>
-                          <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                            {p.tipo || 'IDEA'}
-                          </span>
-                        </div>
-                        <p className="text-sm text-muted-foreground mb-1">
-                          Posted by <span className="font-medium">{getAuthorName(p.author_id)}</span>
-                        </p>
-                        <p className="mt-1 text-sm text-muted-foreground capitalize">
-                          Looking for: {p.role_needed || 'Not specified'}
-                        </p>
-                        {p.estado && (
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            Status: {p.estado}
-                          </p>
-                        )}
+                <div className="space-y-4">
+                  {/* Title */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Title</Label>
+                    <h3 className="text-xl font-semibold text-foreground">{p.title}</h3>
+                  </div>
+
+                  {/* Type and Role Needed - Side by side */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Type</Label>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
+                          {p.tipo || 'IDEA'}
+                        </span>
                       </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Role Needed</Label>
+                      <p className="text-sm font-medium text-foreground capitalize">
+                        {p.role_needed || 'Not specified'}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="text-sm text-foreground">{p.description}</div>
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Description</Label>
+                    <p className="text-sm text-foreground leading-relaxed">{p.description}</p>
+                  </div>
 
+                  {/* Skills Required */}
                   {p.skills_required && p.skills_required.length > 0 && (
-                    <div className="text-sm text-muted-foreground">
-                      <strong>Skills required:</strong>{' '}
-                      {p.skills_required.join(', ')}
+                    <div className="space-y-2">
+                      <Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Skills Required</Label>
+                      <div className="flex flex-wrap gap-2">
+                        {p.skills_required.map((skill: string, idx: number) => (
+                          <span
+                            key={idx}
+                            className="rounded-md bg-muted px-2 py-1 text-xs font-medium text-foreground"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   )}
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(p.created_at).toLocaleDateString()}
-                    </span>
+                  {/* Footer with author, date, and CTA */}
+                  <div className="flex items-center justify-between pt-4 border-t">
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-muted-foreground">
+                        Posted by <span className="font-medium text-foreground">{getAuthorName(p.author_id)}</span>
+                      </span>
+                      <span className="text-xs text-muted-foreground">•</span>
+                      <span className="text-xs text-muted-foreground">
+                        {new Date(p.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
                     <div className="flex gap-2">
                       <Button
                         onClick={() => setExpandedPost(expandedPost === p.id ? null : p.id)}
@@ -287,7 +308,7 @@ export default function Collab() {
                         variant="default"
                         size="sm"
                       >
-                        {applying === p.id ? 'Applying...' : 'Join'}
+                        {applying === p.id ? 'Connecting...' : 'Connect'}
                       </Button>
                     </div>
                   </div>

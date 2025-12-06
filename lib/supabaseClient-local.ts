@@ -143,9 +143,11 @@ export const supabase = {
 
 // Initialize with seed data on first load (client-side only)
 if (typeof window !== 'undefined') {
-  // Use a flag to only seed once
+  // Check if posts exist, if not, seed them
+  const posts = LocalDB.getPosts()
   const seeded = localStorage.getItem('db_seeded')
-  if (!seeded) {
+  
+  if (!seeded || posts.length === 0) {
     const mockUsers = [
       { user_id: 'u1', id: 'profile_u1', display_name: 'Alex', role: 'developer', skills: ['react', 'typescript', 'aws'], bio: 'Full-stack developer passionate about building scalable web applications.' },
       { user_id: 'u2', id: 'profile_u2', display_name: 'Maya', role: 'founder', skills: ['healthcare', 'product', 'research'], bio: 'Healthcare entrepreneur building the future of patient care.' },
