@@ -10,16 +10,14 @@ export function CommentsList({ postId }: { postId: string }) {
 
   useEffect(() => {
     const loadComments = async () => {
-      // Load comments for this initiative
-      const { data: commentsData } = await supabase
-        .from('comments')
-        .select('*')
-        .eq('id_iniciativa', postId)
+      // Load comments for this initiative using LocalDB directly
+      const commentsData = LocalDB.getCommentsByInitiative(postId)
       
       // Load all profiles for name lookup
       const { data: profilesData } = await supabase
         .from('profiles')
         .select('*')
+        .limit(100)
       
       setComments(commentsData || [])
       setProfiles(profilesData || [])

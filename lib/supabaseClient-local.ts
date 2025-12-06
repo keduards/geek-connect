@@ -23,8 +23,11 @@ export const supabase = {
       if (user) {
         callback('SIGNED_IN', { user })
       }
+      const subscription = {
+        unsubscribe: () => {},
+      }
       return {
-        data: { subscription: null },
+        data: { subscription },
         unsubscribe: () => {},
       }
     },
@@ -95,6 +98,9 @@ export const supabase = {
                 return { data: sorted.slice(0, count), error: null }
               },
             }
+          },
+          limit: async (count: number) => {
+            return { data: data.slice(0, count), error: null }
           },
         }
         return queryBuilder

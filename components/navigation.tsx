@@ -19,15 +19,8 @@ export function Navigation() {
 
     checkUser()
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(() => {
-      checkUser()
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
+    // For local auth, we don't need to subscribe to changes
+    // Just check user on mount
   }, [])
 
   const isActive = (path: string) => pathname === path
