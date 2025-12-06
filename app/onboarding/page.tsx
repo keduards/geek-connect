@@ -60,7 +60,7 @@ export default function Onboarding() {
   return (
     <>
       <div className="min-h-screen bg-background p-4 md:p-6 lg:p-12 w-full">
-        <div className="mx-auto w-full max-w-2xl space-y-8">
+        <div className="mx-auto w-full md:max-w-2xl space-y-8">
           <div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome to Geek Connect</h1>
             <p className="mt-4 text-base md:text-lg text-muted-foreground">
@@ -68,11 +68,11 @@ export default function Onboarding() {
             </p>
           </div>
 
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="role" className="text-base">Role</Label>
+          <div className="space-y-6 w-full">
+            <div className="space-y-2 w-full">
+              <Label htmlFor="role" className="text-base h-[60px] flex items-center">Role</Label>
               <Select value={role} onValueChange={setRole}>
-                <SelectTrigger id="role" className="h-[60px] text-base">
+                <SelectTrigger id="role" className="h-[60px] text-base w-full">
                   <SelectValue placeholder="Select your role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -86,21 +86,21 @@ export default function Onboarding() {
               </Select>
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="skills" className="text-base">Skills (comma separated)</Label>
+            <div className="space-y-2 w-full">
+              <Label htmlFor="skills" className="text-base h-[60px] flex items-center">Skills (comma separated)</Label>
               <Input
                 id="skills"
                 value={skills}
                 onChange={(e) => setSkills(e.target.value)}
                 placeholder="e.g., React, TypeScript, Node.js"
-                className="h-12"
+                className="h-[60px] w-full text-base"
               />
               <p className="text-sm text-muted-foreground">
                 Separate multiple skills with commas
               </p>
             </div>
 
-            <Button onClick={save} disabled={loading} className="w-full h-12 text-base" size="lg">
+            <Button onClick={save} disabled={loading} className="w-full h-[60px] text-base" size="lg">
               {loading ? 'Saving...' : 'Save & Continue'}
             </Button>
           </div>
