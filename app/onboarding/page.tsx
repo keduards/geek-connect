@@ -13,11 +13,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+} from '@/components/ui/dialog'
+import { Loader2 } from 'lucide-react'
 
 export default function Onboarding() {
   const [role, setRole] = useState('developer')
   const [skills, setSkills] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showConnectingModal, setShowConnectingModal] = useState(false)
   const router = useRouter()
 
   const save = async () => {
@@ -35,63 +42,83 @@ export default function Onboarding() {
         })
         .eq('user_id', user.id)
 
-      router.push('/matches')
+      // Show connecting modal
+      setShowConnectingModal(true)
+      setLoading(false)
+
+      // Wait 5 seconds then redirect
+      setTimeout(() => {
+        router.push('/matches')
+      }, 5000)
     } catch (error) {
       console.error('Error saving profile:', error)
       alert('Failed to save profile. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background p-6 md:p-12">
-      <div className="mx-auto max-w-2xl space-y-8">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight">Welcome to Geek Connect</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Set up your profile to start connecting with other professionals
-          </p>
-        </div>
-
-        <div className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="role" className="text-base">Role</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger id="role" className="h-12">
-                <SelectValue placeholder="Select your role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="developer">Developer</SelectItem>
-                <SelectItem value="product_manager">Product Manager</SelectItem>
-                <SelectItem value="product_designer">Product Designer</SelectItem>
-                <SelectItem value="qa">QA</SelectItem>
-                <SelectItem value="devops">DevOps</SelectItem>
-                <SelectItem value="founder">Founder</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="skills" className="text-base">Skills (comma separated)</Label>
-            <Input
-              id="skills"
-              value={skills}
-              onChange={(e) => setSkills(e.target.value)}
-              placeholder="e.g., React, TypeScript, Node.js"
-              className="h-12"
-            />
-            <p className="text-sm text-muted-foreground">
-              Separate multiple skills with commas
+    <>
+      <div className="min-h-screen bg-background p-4 md:p-6 lg:p-12 w-full">
+        <div className="mx-auto w-full max-w-2xl space-y-8">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome to Geek Connect</h1>
+            <p className="mt-4 text-base md:text-lg text-muted-foreground">
+              Set up your profile to start connecting with other professionals
             </p>
           </div>
 
-          <Button onClick={save} disabled={loading} className="w-full h-12 text-base" size="lg">
-            {loading ? 'Saving...' : 'Save & Continue'}
-          </Button>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="role" className="text-base">Role</Label>
+              <Select value={role} onValueChange={setRole}>
+                <SelectTrigger id="role" className="h-[60px] text-base">
+                  <SelectValue placeholder="Select your role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="developer">Developer</SelectItem>
+                  <SelectItem value="product_manager">Product Manager</SelectItem>
+                  <SelectItem value="product_designer">Product Designer</SelectItem>
+                  <SelectItem value="qa">QA</SelectItem>
+                  <SelectItem value="devops">DevOps</SelectItem>
+                  <SelectItem value="founder">Founder</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="skills" className="text-base">Skills (comma separated)</Label>
+              <Input
+                id="skills"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+                placeholder="e.g., React, TypeScript, Node.js"
+                className="h-12"
+              />
+              <p className="text-sm text-muted-foreground">
+                Separate multiple skills with commas
+              </p>
+            </div>
+
+            <Button onClick={save} disabled={loading} className="w-full h-12 text-base" size="lg">
+              {loading ? 'Saving...' : 'Save & Continue'}
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Connecting Modal */}
+      <Dialog open={showConnectingModal} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md" showCloseButton={false}>
+          <div className="flex flex-col items-center justify-center space-y-4 py-8">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <DialogDescription className="text-center text-lg font-medium">
+              Connecting you to the best talent you can work with today
+            </DialogDescription>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
 
