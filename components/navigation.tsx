@@ -40,9 +40,9 @@ export function Navigation() {
     <Link
       href={href}
       onClick={() => setMobileMenuOpen(false)}
-      className={`text-sm hover:text-primary ${
+      className={`py-2 px-4 rounded-md text-base hover:bg-accent hover:text-accent-foreground transition-colors ${
         isActive(href)
-          ? 'font-medium text-primary'
+          ? 'font-medium text-primary bg-accent'
           : 'text-muted-foreground'
       }`}
     >
@@ -77,17 +77,19 @@ export function Navigation() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-              <div className="flex flex-col space-y-4 mt-8">
+              <div className="flex flex-col space-y-6 py-6">
                 <Link
                   href="/"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-lg font-semibold text-foreground mb-4"
+                  className="text-xl font-semibold text-foreground pb-4 border-b"
                 >
                   Geek Connect
                 </Link>
-                {navLinks.map((link) => (
-                  <NavLink key={link.href} href={link.href} label={link.label} />
-                ))}
+                <div className="flex flex-col space-y-4">
+                  {navLinks.map((link) => (
+                    <NavLink key={link.href} href={link.href} label={link.label} />
+                  ))}
+                </div>
               </div>
             </SheetContent>
           </Sheet>
