@@ -14,6 +14,13 @@ import {
 } from '@/components/ui/select'
 import { useRouter } from 'next/navigation'
 import { CommentsList } from './CommentsList'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { Plus } from 'lucide-react'
 
 export default function Collab() {
   const [title, setTitle] = useState('')
@@ -27,6 +34,7 @@ export default function Collab() {
   const [applying, setApplying] = useState<string | null>(null)
   const [expandedPost, setExpandedPost] = useState<string | null>(null)
   const [commentText, setCommentText] = useState<{ [key: string]: string }>({})
+  const [showMobileForm, setShowMobileForm] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
@@ -85,6 +93,7 @@ export default function Collab() {
       setPosts(postsData || [])
       setTitle('')
       setDesc('')
+      setShowMobileForm(false) // Close mobile form after creating
     } catch (error) {
       console.error('Error creating post:', error)
       alert('Failed to create post. Please try again.')
@@ -156,8 +165,8 @@ export default function Collab() {
 
         {/* 2 Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column - Slim: Create Post Form */}
-          <div className="lg:col-span-3">
+          {/* Left Column - Slim: Create Post Form (Hidden on mobile) */}
+          <div className="hidden lg:block lg:col-span-3">
             <div className="sticky top-6 rounded-lg border bg-card p-4 shadow-sm">
               <h2 className="mb-4 text-lg font-semibold">Add New Post</h2>
               <div className="space-y-4">
@@ -220,7 +229,7 @@ export default function Collab() {
             </div>
           </div>
 
-          {/* Right Column - Wide: Recent Posts */}
+          {/* Right Column - Wide: Recent Posts (Full width on mobile) */}
           <div className="lg:col-span-9">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Recent Posts</h2>
@@ -347,6 +356,94 @@ export default function Collab() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Floating Add Button */}
+      <button
+        onClick={() => setShowMobileForm(true)}
+        className="fixed bottom-6 right-6 lg:hidden h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow flex items-center justify-center z-50"
+        aria-label="Add new post"
+      >
+        <Plus className="h-6 w-6" />
+      </button>
+
+      {/* Mobile Form Dialog */}
+      <Dialog open={showMobileForm} onOpenChange={setShowMobileForm}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Add New Post</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="mobile-title" className="text-sm">Title</Label>
+              <Input
+                id="mobile-title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g., Looking for a React developer"
+                className="text-sm"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="mobile-tipo" className="text-sm">Type</Label>
+              <Select value={tipo} onValueChange={setTipo}>
+                <SelectTrigger id="mobile-tipo" className="text-sm">
+                  <SelectValue placeholder="Select type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="IDEA">Idea</SelectItem>
+                  <SelectItem value="PROYECTO">Project</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="mobile-role" className="text-sm">Role Needed</Label>
+              <Select value={roleNeeded} onValueChange={setRoleNeeded}>
+                <SelectTrigger id="mobile-role" className="text-sm">
+                  <SelectValue placeholder="Select role needed" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="developer">Developer</SelectItem>
+                  <SelectItem value="product_manager">Product Manager</SelectItem>
+                  <SelectItem value="product_designer">Product Designer</SelectItem>
+                  <SelectItem value="qa">QA</SelectItem>
+                  <SelectItem value="devops">DevOps</SelectItem>
+                  <SelectItem value="founder">Founder</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="mobile-description" className="text-sm">Description</Label>
+              <textarea
+                id="mobile-description"
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                placeholder="Describe your project..."
+                className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              />
+            </div>
+
+            <div className="flex gap-2 pt-2">
+              <Button
+                onClick={() => setShowMobileForm(false)}
+                variant="outline"
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={create}
+                disabled={creating || !title || !desc}
+                className="flex-1 text-sm"
+              >
+                {creating ? 'Creating...' : 'Create Post'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
