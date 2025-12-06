@@ -45,20 +45,20 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-6">
-      <div className="w-full max-w-md space-y-6 rounded-lg border bg-card p-8 shadow-sm">
+    <div className="min-h-screen bg-background p-6 md:p-12">
+      <div className="mx-auto max-w-2xl space-y-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quick Onboarding</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Set up your profile to start connecting
+          <h1 className="text-4xl font-bold tracking-tight">Welcome to Geek Connect</h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Set up your profile to start connecting with other professionals
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
+            <Label htmlFor="role" className="text-base">Role</Label>
             <Select value={role} onValueChange={setRole}>
-              <SelectTrigger id="role">
+              <SelectTrigger id="role" className="h-12">
                 <SelectValue placeholder="Select your role" />
               </SelectTrigger>
               <SelectContent>
@@ -73,19 +73,20 @@ export default function Onboarding() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="skills">Skills (comma separated)</Label>
+            <Label htmlFor="skills" className="text-base">Skills (comma separated)</Label>
             <Input
               id="skills"
               value={skills}
               onChange={(e) => setSkills(e.target.value)}
               placeholder="e.g., React, TypeScript, Node.js"
+              className="h-12"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Separate multiple skills with commas
             </p>
           </div>
 
-          <Button onClick={save} disabled={loading} className="w-full" size="lg">
+          <Button onClick={save} disabled={loading} className="w-full h-12 text-base" size="lg">
             {loading ? 'Saving...' : 'Save & Continue'}
           </Button>
         </div>
