@@ -7,13 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -69,21 +62,31 @@ export default function Onboarding() {
           </div>
 
           <div className="space-y-6 w-full">
-            <div className="space-y-2 w-full">
+            <div className="space-y-4 w-full">
               <Label htmlFor="role" className="text-base h-[60px] flex items-center">Role</Label>
-              <Select value={role} onValueChange={setRole}>
-                <SelectTrigger id="role" className="h-[60px] text-base w-full">
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="developer">Developer</SelectItem>
-                  <SelectItem value="product_manager">Product Manager</SelectItem>
-                  <SelectItem value="product_designer">Product Designer</SelectItem>
-                  <SelectItem value="qa">QA</SelectItem>
-                  <SelectItem value="devops">DevOps</SelectItem>
-                  <SelectItem value="founder">Founder</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 w-full">
+                {[
+                  { value: 'developer', label: 'Developer' },
+                  { value: 'product_manager', label: 'Product Manager' },
+                  { value: 'product_designer', label: 'Product Designer' },
+                  { value: 'qa', label: 'QA' },
+                  { value: 'devops', label: 'DevOps' },
+                  { value: 'founder', label: 'Founder' },
+                ].map((roleOption) => (
+                  <button
+                    key={roleOption.value}
+                    type="button"
+                    onClick={() => setRole(roleOption.value)}
+                    className={`h-[60px] rounded-lg text-base font-medium transition-colors ${
+                      role === roleOption.value
+                        ? 'bg-black text-white'
+                        : 'bg-muted text-foreground hover:bg-muted/80'
+                    }`}
+                  >
+                    {roleOption.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="space-y-2 w-full">
