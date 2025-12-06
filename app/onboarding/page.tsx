@@ -107,17 +107,21 @@ export default function Onboarding() {
         </div>
       </div>
 
-      {/* Connecting Modal */}
-      <Dialog open={showConnectingModal} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-md" showCloseButton={false}>
-          <div className="flex flex-col items-center justify-center space-y-4 py-8">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-            <DialogDescription className="text-center text-lg font-medium">
+      {/* Connecting Modal - Full Screen */}
+      {showConnectingModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Blur backdrop with 60% white opacity */}
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-md" />
+          
+          {/* Full screen content */}
+          <div className="relative z-10 flex flex-col items-center justify-center space-y-6 w-full h-full p-6">
+            <Loader2 className="h-16 w-16 animate-spin text-primary" />
+            <p className="text-center text-xl md:text-2xl font-medium text-foreground max-w-md">
               Connecting you to the best talent you can work with today
-            </DialogDescription>
+            </p>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+      )}
     </>
   )
 }
