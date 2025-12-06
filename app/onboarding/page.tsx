@@ -14,7 +14,7 @@ import {
 import { Loader2 } from 'lucide-react'
 
 export default function Onboarding() {
-  const [role, setRole] = useState('developer')
+  const [role, setRole] = useState('')
   const [skills, setSkills] = useState('')
   const [loading, setLoading] = useState(false)
   const [showConnectingModal, setShowConnectingModal] = useState(false)
@@ -119,9 +119,10 @@ export default function Onboarding() {
           {/* Full screen content */}
           <div className="relative z-10 flex flex-col items-center justify-center space-y-6 w-full h-full p-6">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />
-            <p className="text-center text-xl md:text-2xl font-medium text-foreground max-w-md">
-              Connecting you to the best talent you can work with today
-            </p>
+            <div className="text-center text-xl md:text-2xl font-medium text-foreground max-w-md space-y-2">
+              <p>Connecting you to the best talent</p>
+              <p>you can work with today</p>
+            </div>
           </div>
         </div>
       )}
