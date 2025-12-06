@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "CursorCafe - Networking",
+  title: "Geek Connect",
   description: "Connect with product development professionals",
 };
 
